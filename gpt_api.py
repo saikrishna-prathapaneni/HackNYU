@@ -46,7 +46,8 @@ from get_mail import get_topN_mails
 import re
 import openai
 import re
-openai.api_key = "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"
+
+openai.api_key = "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"
 
 # Define prompt
 prompt_old = (f"Please extract the following information from the following 2 prompts:\n"
@@ -62,66 +63,42 @@ prompt_old = (f"Please extract the following information from the following 2 pr
           f"- Job Position:\n"
           f"- Status:\n")
 
-p="Dear Kaushik Tummalapalli - Thank you for your interest in working at NVIDIA. We are reaching out to inform you that we are no longer recruiting for the Deep Learning Algorithm Engineering Intern role. We are always hiring and hope you’ll continue to explore opportunities with us as they become available. We appreciate your passion for NVIDIA and wish you the best in your job search. Best Regards, The NVIDIA Recruiting Team"
+#p="Dear Kaushik Tummalapalli - Thank you for your interest in working at NVIDIA. We are reaching out to inform you that we are no longer recruiting for the Deep Learning Algorithm Engineering Intern role. We are always hiring and hope you’ll continue to explore opportunities with us as they become available. We appreciate your passion for NVIDIA and wish you the best in your job search. Best Regards, The NVIDIA Recruiting Team"
 
+emails=["Thank you for applying at Cisco! We think it's a great place to work and we're excited that you're interested in joining us as a Product Management Intern (MBA) - Summer FY23 Internship (Meraki), Job ID 1388255 here, please upload your resume to your Cisco Careers profile if you haven't done so already, we'll use the information you provided and assess your background based on the role requirements, if there's a potential match for the position, we will contact you to discuss next steps, we may also use this information to consider you for future openings that match your skills and experience, in which case we would contact you directly, to update your profile, view application status, or search for other exciting opportunities, please visit our Cisco Careers, meanwhile, keep checking for other roles that might match your interests, and even set up job alerts to notify you of any new openings, thank you again for your interest in Cisco, best regards, Cisco Recruiting.","Hi Kaushik, thank you for applying for our Strategic Student Program: Software Developer Intern (Summer 2023) (348636) position, you're now one step closer to joining the world's smartest minds who make real what matters – from smart grids that power whole cities to manufacturing systems that use lightweight robotics, we'll review your application and contact you to let you know the next steps, you can also follow your progress within your Siemens account.",
+"Hello Kaushik, thank you for wanting to join this adventure with us, we have received your application for our Software Engineering Intern - Software Systems (Summer 2023) role and will review it shortly, our recruiting team will contact you should the opportunity and your experience align, to learn more about Rivian, please visit our Careers site, our LinkedIn page, and our YouTube channel to see how we are bringing our work to life, thanks again for considering us, regards, the Rivian Talent Acquisition Team.","Dear Kaushik Tummalapalli, thank you for your application for the Artificial Intelligence / Machine Learning: Human Assisted AI & Data-Centric AI - Intern - 384 Santa Trinita Ave, Sunnyvale, CA 94085, USA position, your online application was successfully received, we will carefully compare your experience and qualifications to the specific position for which you applied, we will then get back to you accordingly, please click on the button below to register and access your application in future, you will then be able to check the current status of your application, if you have any questions please don't hesitate to contact us by replying to this email, yours sincerely, Bosch Group Talent Acquisition Team, Bosch privacy policy, SmartRecruiters terms of use and privacy policy, https://www.bosch.com/careers/."]
 
 p1="Hi Sri, We would like to thank you for your interest in BETA Technologies. We appreciate you taking the time to participate in our video screening and for your continued interest in BETA. It has provided us with an opportunity to learn about your skills and accomplishments. After much consideration, we've determined we do not currently have an opening for an Internship that matches your interests and experience. That being said, we’d like to keep your resume on file for future internship opportunities or if our needs shift for this coming summer. We encourage you to stay connected as you expand your experience and knowledge throughout your studies and encourage you to reapply to future opportunities at BETA. We really appreciate you taking the time to get to know BETA. Best of luck, and please keep in touch! Sincerely"
 #print(len(p1))
-prompt = (f"Please extract the following information from the following prompt:\n"
+prompt_old = (f"Please extract the following information from the following prompt:\n"
           f"Prompt: {p1}\n"
           f"Extract the following information from the above prompt and return the following:, and for the Status choose the best appropriate between [Accepted, Rejected, Interview call, Online Assesment]\n"
           f"- Company Name:\n"
           f"- Job Position:\n"
           f"- Status:\n")
-        
-all_emails=get_topN_mails()
-#print(max(all_emails, key=len))
-#print(len(max(all_emails, key=len)))
-#print(len(all_emails))
 
 def is_job_application_status(prompt):
-    job_keywords = ["rejected","job application", "job status", "job offer", "job interview","job","status","application","applied","applied for","applied to","applied for the","applied to the","applied for the position","applied to the position","applied for the role","applied to the role","applied for the job","applied to the job","applied for the internship","applied to the internship","applied for the internship position","applied to the internship position","applied for the internship role","applied to the internship role","applied for the internship job","applied to the internship job","applied for the internship position","applied to the internship position","applied for the internship role","applied to the internship role","applied for the internship job","applied to the internship job","applied for the internship position","applied to the internship position","applied for the internship role","applied to the internship role","applied for the internship job","applied to the internship job","applied for the internship position","applied to the internship position","applied for the internship role","applied to the internship role","applied for the internship job","applied to the internship job","applied for the internship position","applied to the internship position","applied for the internship role","applied to the internship role","applied for the internship job","applied to the internship job","applied for the internship position","applied to the internship position","applied for the internship role","applied to the internship role","applied for the internship job","applied to the internship job","applied for the internship position","applied to the internship position","applied for the internship role","applied to the internship role","applied for the internship job","applied to the internship job","applied for the internship position","applied to the internship position","applied for the internship role","applied to the internship role","applied for the internship job","applied to the internship job","applied for the internship position","applied to the internship position","applied for the internship role","applied to the internship role","applied for the internship job","applied to the internship job","applied for the internship position","applied to the internship position","applied for the internship role","applied to the internship role","applied for the internship job","applied to the internship job","applied for the internship position","applied to the internship position","applied for the internship role"]
+    job_keywords = ["rejected","job application", "job status", "job offer", "job interview","applied","apply"]
     internship_keywords = ["internship application", "internship status", "internship offer", "internship interview"]
     prompt_lower = prompt.lower()
+    wrong_keywords = ["github","git","groww","digest", "article", "headline", "story", "report", "journalism", "news", "newspaper", "magazine", "press", "press release", "press conference"]
     for keyword in job_keywords:
+        if keyword in wrong_keywords:
+            return False
         if keyword in prompt_lower:
             return True
     for keyword in internship_keywords:
         if keyword in prompt_lower:
             return True
     return False
-
-for prompt in all_emails:
-    p1 = re.sub(r"[\r\n\t]+", " ", prompt)
-    prompt = (f"Please extract the following information from the following prompt:\n"
-          f"Prompt: {p1}\n"
-          f"Extract the following information from the above prompt and return the following:, and for the Status choose the best appropriate between [Accepted, Rejected, Interview call, Online Assesment]\n"
-          f"- Company Name:\n"
-          f"- Job Position:\n"
-          f"- Status:\n")
-
-    #print(prompt)
-
-    if(is_job_application_status(prompt)):
-        response = openai.Completion.create(
-        engine="text-davinci-002",
-        prompt=prompt,
-        max_tokens=1024,
-        n=1,
-        stop=None,
-        temperature=0.5,)
-        output = response.choices[0].text.strip()
-        print(output)
-    else:
-        print("Not a job application status prompt")    
-
-
-# Extract the Company Name, Job Position, and Status from the response
-#output = response.choices[0].text.strip()
-#print(output)
 """
-p1="Hi Sri, We would like to thank you for your interest in BETA Technologies. We appreciate you taking the time to participate in our video screening and for your continued interest in BETA. It has provided us with an opportunity to learn about your skills and accomplishments. After much consideration, we've determined we do not currently have an opening for an Internship that matches your interests and experience. That being said, we’d like to keep your resume on file for future internship opportunities or if our needs shift for this coming summer. We encourage you to stay connected as you expand your experience and knowledge throughout your studies and encourage you to reapply to future opportunities at BETA. We really appreciate you taking the time to get to know BETA. Best of luck, and please keep in touch! Sincerely"
-#print(len(p1))
+all_emails=get_topN_mails()
+email_top= all_emails
+#print(email_top)
+#print(max(all_emails, key=len))
+#print(len(max(all_emails, key=len)))
+#print(len(all_emails))
+p1 = re.sub(r"[\r\n\t]+", " ", email_top)
 prompt = (f"Please extract the following information from the following prompt:\n"
           f"Prompt: {p1}\n"
           f"Extract the following information from the above prompt and return the following:, and for the Status choose the best appropriate between [Accepted, Rejected, Interview call, Online Assesment]\n"
@@ -129,8 +106,6 @@ prompt = (f"Please extract the following information from the following prompt:\
           f"- Job Position:\n"
           f"- Status:\n")
 
-
-# Call OpenAI's GPT-3 API to generate the desired output
 if(is_job_application_status(prompt)):
     response = openai.Completion.create(
     engine="text-davinci-002",
@@ -140,20 +115,36 @@ if(is_job_application_status(prompt)):
     stop=None,
     temperature=0.5,)
     output = response.choices[0].text.strip()
-    #print(output)
+    print(output)
 else:
-    print("Not a job application status prompt")
-
-
-# Regular Expressions to extract the Company Name, Job Position, and Status from the above prompt:
-company_name = re.search(r"Company Name:(.*)Job Position:", output).group(1).strip()
-job_position = re.search(r"Job Position:(.*)Status:", output).group(1).strip()
-status = re.search(r"Status:(.*)", output).group(1).strip()
-
-# Print the Company Name, Job Position, and Status
-print(f"Company Name: {company_name}")
-print(f"Job Position: {job_position}")
-print(f"Status: {status}")
+    print("Not a job application status prompt")    
 """
 
-"Thank You for your interest in BETA Technologies\r\nTo: <sp6904@nyu.edu>\r\n\r\n\r\nHi Sri,\r\n\r\nWe would like to thank you for your interest in BETA Technologies. We\r\nappreciate you taking the time to participate in our video screening and\r\nfor your continued interest in BETA. It has provided us with an opportunity\r\nto learn about your skills and accomplishments.\r\n\r\nAfter much consideration, we've determined we do not currently have an\r\nopening for an Internship that matches your interests and experience. That\r\nbeing said, we’d like to keep your resume on file for future internship\r\nopportunities or if our needs shift for this coming summer. We encourage\r\nyou to stay connected as you expand your experience and knowledge\r\nthroughout your studies and encourage you to reapply to future\r\nopportunities at BETA.\r\n\r\nWe really appreciate you taking the time to get to know BETA. Best of luck"
+def gpt_api():
+    all_emails=get_topN_mails()
+    email_top= all_emails
+    p1 = re.sub(r"[\r\n\t]+", " ", email_top)
+    prompt = (f"Please extract the following information from the following prompt:\n"
+          f"Prompt: {p1}\n"
+          f"Extract the following information from the above prompt and return the following:, and for the Status choose the best appropriate between [Accepted, Rejected, Interview call, Online Assesment]\n"
+          f"- Company Name:\n"
+          f"- Job Position:\n"
+          f"- Status:\n")
+    if(is_job_application_status(prompt)):
+        response = openai.Completion.create(
+        engine="text-davinci-002",
+        prompt=prompt,
+        max_tokens=1024,
+        n=1,
+        stop=None,
+        temperature=0.5,)
+        output = response.choices[0].text.strip()
+        li=output.split("\n")
+        return {"Company":li[0],"Job Position":li[1],"Status":li[2],"mail":email_top}
+        #print(output)
+    else:
+        return "Not a job application status prompt"
+
+# print(gpt_api())
+
+

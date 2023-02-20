@@ -27,10 +27,12 @@ def get_topN_mails(n=10):
     creds = Credentials.from_authorized_user_file('token.json', ['https://mail.google.com/'])
     service = build('gmail', 'v1', credentials=creds)
 
-    result = service.users().messages().list(userId='me',q='is category:primary ',maxResults=10).execute()
+    result = service.users().messages().list(userId='me',maxResults=1).execute()
 
 
     message_list=[]
+        
+    
     
     if 'messages' in result:
         messages = result['messages']
@@ -47,8 +49,13 @@ def get_topN_mails(n=10):
                     soup = BeautifulSoup(decoded_data, "html.parser")
                     #print(soup.get_text())
                     message_list.append(soup.get_text())
-                  
-            else:
+            
+            elif msg['payload']['mimeType']=='multipart/mixed':
+                message_list.append("multipart/mixed")
+            
+            else:      
+                # print(msg['payload'].keys())
+               
                 for part in msg['payload']['parts']:
                     if part['mimeType'] == "text/plain":
                                     
@@ -59,8 +66,8 @@ def get_topN_mails(n=10):
                         #print(decoded_data)
                        
        
-    return message_list
+    return message_list[0]
       
             
                 
-print(get_topN_mails())
+# print(get_topN_mails())
